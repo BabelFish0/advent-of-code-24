@@ -1,0 +1,1 @@
+import re;print(sum([int(m[0])*int(m[1]) for m in re.compile(r'mul\((\d{1,3}),(\d{1,3})\)').findall(open('./input/day3-1.txt').read())]))
