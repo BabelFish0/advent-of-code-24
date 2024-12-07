@@ -25,15 +25,16 @@ def main(init_board, pathlog):
         while not collided:
             state = nextstate
             pathlog += (state==-1).astype(np.int64)
-            # print(pathlog.astype(bool).astype(np.int64)*2 + state)
+            print(pathlog.astype(bool).astype(np.int64)*2 + state)
             nextstate = next(state, mode)
             collided = not len(np.flatnonzero(nextstate)) == state_summary
             if ended(state):
                 break
-            # time.sleep(0.2)
+            time.sleep(0.2)
         nextstate = state
         mode = (mode+1)%4
     
     print(f'Total cell visits: {np.sum(pathlog.astype(bool).astype(np.int64))-1}')
 
-main(board, pathlog)
+with np.printoptions(threshold=np.inf, linewidth= np.inf):
+    main(board, pathlog)
