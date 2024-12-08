@@ -24,13 +24,13 @@ def deconcatenate(target, remove):
 def check(target:int, components:list, i)->bool:
     '''Recursively work right to left and eliminate things that are impossible where applicable.'''
     if target < 0 or components[-1] < 0: # catch negatives (rare)
-        print(f'\033[93m\033[41m{i:<3}\033[0m', end='') # end nodes print their recursion depth because it looks cool
+        print(f'\033[93;41m{i:<3}\033[0m', end='') # end nodes print their recursion depth because it looks cool
         return False
     if len(components) == 1: # base case
         if components[0] == target:
-            print(f'\033[92m\033[44m{i:<3}\033[0m', end='')
+            print(f'\033[92;44m{i:<3}\033[0m', end='')
             return True
-        print(f'\033[93m\033[41m{i:<3}\033[0m', end='')
+        print(f'\033[93;41m{i:<3}\033[0m', end='')
         return False
     rightmost = components[-1]
     if target//rightmost != target/rightmost: # check if multiplication could've been the last op, then test deconcatenation
@@ -54,7 +54,7 @@ with open('./input/day7-1.txt') as INPUT:
         if a:
             print('\033[42m', end='') # colour based on result
         else:
-            print('\033[31m\033[09m', end='')
+            print('\033[31;09m', end='')
         print(f'{target:<15}\033[0m│ from {components}')
 
         
