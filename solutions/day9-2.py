@@ -76,14 +76,14 @@ def main():
         def __init__(self):
             super().__init__()
         def mprint(self, storage):
-            flattened = [int((x%6)*(x!=-1)-(x==-1)) for xs in storage for x in xs]
-            self.iprint(self, flattened)
-    v = vis
-    v.mapping = {-1:Colour.Kbg, 0:Colour.Rbg, 1:Colour.Mbg, 2:Colour.Bbg, 3:Colour.Cbg, 4:Colour.Gbg, 5:Colour.Ybg}
+            flattened = [int((x%(len(self.mapping.values())-1))*(x!=-1)-(x==-1)) for xs in storage for x in xs]
+            self.iprint(flattened)
+    v = vis()
+    v._default()
     S = pop_empty(convert([int(a) for a in open(INPUT).read()[:-1]]))
     S = swap_possible(S)
-    v.clear(v)
-    v.mprint(v, S)
+    v.clear()
+    v.mprint(S)
     print('\n' + str(checksum(S)))
 
 main()

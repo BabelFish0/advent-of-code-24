@@ -17,7 +17,7 @@ class Colour:
 
 class Printer:
     def __init__(self):
-        self.colours = Colour()
+        self.colours = Colour
         self.mapping = {}
 
     def _default(self):
