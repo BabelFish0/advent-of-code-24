@@ -16,7 +16,7 @@ def printer(state):
     RESET = '\033[0m'
     for row in state:
         for entry in row:
-            if entry == -2:
+            if entry == -2 or -1:
                 print(CYAN + ' ', end='')
             if entry == 0:
                 print(BLANK + ' ', end='')
@@ -51,7 +51,7 @@ def get_obstacle_pos(init_board, pathlog):
             if ended(state):
                 break
             if not collided:
-                yield state, nextstate, copy.deepcopy(pathlog), mode
+                yield copy.deepcopy(state), copy.deepcopy(nextstate), copy.deepcopy(pathlog), copy.deepcopy(mode)
             pathlog[mode] += (state==-1)
         nextstate = state
         mode = (mode+1)%4
@@ -66,16 +66,17 @@ def run(init_board, pathlog, mode=0):
     while not ended(state):
         collided = False
         while not collided:
-            # printer(state)
+            # print(state)
+            # printer(state + obstacle*2 + (sum(pathlog.values())>0)*-2)
             state = nextstate
             if will_loop(state, mode, pathlog):
                 return True, pathlog
             pathlog[mode] += (state==-1)
-            nextstate = next(state, mode)
+            nextstate = copy.deepcopy(next(state, mode))
             collided = not len(np.flatnonzero(nextstate)) == state_summary
             if ended(state):
                 return False, pathlog
-        nextstate = state
+        nextstate = copy.deepcopy(state)
         mode = (mode+1)%4
     return False, pathlog
 
@@ -85,7 +86,7 @@ persistent_log = {0:np.zeros(shape=np.shape(board)), 1:np.zeros(shape=np.shape(b
 for state, nextstate, log, mode in get_obstacle_pos(board, pathlog):
     obstacle = (nextstate==-1)
     persistent_log = {key: (persistent_log[key] + log[key])>0 for key in range(4)}
-    loops, route = run(state+obstacle, copy.deepcopy(persistent_log), mode)
+    loops, route = run(copy.deepcopy(state+obstacle), copy.deepcopy(persistent_log), mode)
     # persistent_log[mode] = np.where((persistent_log[mode]*(state==-1))>0, 0, persistent_log[mode])
     if loops:
         c += 1
