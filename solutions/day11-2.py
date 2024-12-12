@@ -40,10 +40,11 @@ def main():
     for i in range(75):
         arrangement = iterate(arrangement)
         print(f'{i + 1} blinks')
+        # print(arrangement)
     count = sum(arrangement.values())
     t1 = time.perf_counter()-t0
 
-    info = {'largest pebble: ':max(arrangement.keys()), 'highest duplicate pebble count: ':max(arrangement.values())}
+    info = {'largest pebble: ':max(arrangement.keys()), 'highest duplicate pebble count: ':max(arrangement.values()), 'arrangement dict size: ':len(arrangement)}
     print(f'\ntotal: \033[45m{count}\033[0m in {t1:.2}s.')
     for summary in [t[0] + str(t[1]) for t in zip(info.keys(), info.values())]:
         print(summary)
