@@ -38,6 +38,7 @@ class Printer:
     def __init__(self):
         self.colours = Colour()
         self.mapping = {}
+        self.default = self.colours.Cfg + self.colours.Kbg
 
     def _default(self):
         self.mapping = {-1:self.colours.Kbg, 0:self.colours.Rbg, 1:self.colours.Mbg, 2:self.colours.Bbg, 3:self.colours.Cbg, 4:self.colours.Gbg, 5:self.colours.Ybg}
@@ -64,7 +65,12 @@ class Printer:
 
     def iprint(self, values, width=1, dsp_vals=False):
         for value in values:
-            print(self.mapping[value] + ' '*width*(not dsp_vals) + str(value)*dsp_vals + Colour.RESET, end='')
+            c = self.mapping.get(value)
+            if c:
+                print_colour = c
+            else:
+                print_colour = self.default
+            print(print_colour + ' '*width*(not dsp_vals) + str(value)*dsp_vals + Colour.RESET, end='')
     
     def test(self):
         self.clear()

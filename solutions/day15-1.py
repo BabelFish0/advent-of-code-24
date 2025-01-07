@@ -46,6 +46,7 @@ def main():
     state, instructions = load('./input/day15-1.txt')
     display(state)
     c = 0
+    input('run?')
     for mv in instructions:
         c+=1
         time.sleep(0.05)

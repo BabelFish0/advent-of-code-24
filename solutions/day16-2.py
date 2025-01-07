@@ -44,11 +44,20 @@ class Path:
         global end
         return np.sum(self.position == end) == 2
 
+def backtrack(position, d, min_ref, p_log):
+    p_log[tuple(position)] = 1
+    neighbours = np.array([[1,0], [0,1], [-1,0], [0,-1]])
+    current = min_ref[d][tuple(position)]
+    for neighbour in neighbours:
+            for d2 in range(4):
+                if min_ref[d2][tuple(position+neighbour)] == current-1 or min_ref[d2][tuple(position+neighbour)] == current-1001:
+                    backtrack(position+neighbour,d2, min_ref, p_log)
+
 state = load('./input/day16-1.txt')
 start = np.argwhere(state=='S')[0]
 end = np.argwhere(state=='E')[0]
 walls = {tuple(id) for id in np.argwhere(state=='#')}
-score_log = np.stack([np.where(state=='#', -1e3, 150000)for _ in range(4)]) #((state == '.').astype(np.int64) + (state == 'S').astype(np.int64) + (state == 'E').astype(np.int64)) * 1e6
+score_log = np.stack([np.where(state=='#', -1e2, 150000)for _ in range(4)]) #((state == '.').astype(np.int64) + (state == 'S').astype(np.int64) + (state == 'E').astype(np.int64)) * 1e6
 
 import time
 t0 = time.perf_counter()
@@ -58,5 +67,11 @@ t1 = time.perf_counter()
 p = Printer()
 p.mapping = {'#':p.colours.Kbg+p.colours.Kfg, '.':p.colours.Bbg+p.colours.Bfg, 'S':p.colours.Gbg+p.colours.Mfg, 'E':p.colours.Rbg}
 p.string_arrprint(state, width=1, dsp_vals=False)
-p.arrprint(score_log.min(0), False, width=1)
-print(f'Best score: \033[45m{score_log.min(0)[tuple(end)]:.0f}\033[0m in {t1-t0:.2f}s.')
+solution = score_log.min(0)
+p.arrprint(solution, False, width=1)
+print(f'Best score: \033[45m{solution[tuple(end)]:.0f}\033[0m in {t1-t0:.2f}s.')
+
+p_log = np.zeros(np.shape(solution))
+backtrack(end, 2, score_log, p_log)
+p.arrprint(p_log-np.where(state=='#', 1, 0), bgmode='g', width=1)
+print(f'Number of distinct best route points: \033[45m{np.sum(p_log):.0f}\033[0m')

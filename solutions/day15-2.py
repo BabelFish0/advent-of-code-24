@@ -4,7 +4,7 @@ from utils.progress import Printer
 def display(state, p=Printer()):
     p.mapping = {'#':p.colours.Kbg+p.colours.Kfg, '.':p.colours.Bbg+p.colours.Bfg, '@':p.colours.Gbg+p.colours.Mfg, 'O':p.colours.Rbg, '[':p.colours.Rbg+p.colours.Yfg, ']':p.colours.Rbg+p.colours.Yfg}
     # converted = np.vectorize(mapping.get)(state)
-    p.string_arrprint(state, dsp_vals=True)
+    p.string_arrprint(state, dsp_vals=True, width=1)
 
 def load(path):
     import re
@@ -91,12 +91,13 @@ def main():
     #     move(state, mv)
     #     display(state)
     c = 0
+    input('run?')
     for mv in instructions:
         c+=1
-        time.sleep(0.2)
+        # time.sleep(0.2)
         print(f'Move: \033[045m{mv}\033[0m {100*c/len(instructions):>7.0f}%')
         move(state, mv)
-        display(state)
+    display(state)
     print(f'GPS sum: \033[045m{get_gps(state)}\033[0m')
 
 main()
