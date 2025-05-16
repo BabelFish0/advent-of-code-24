@@ -38,6 +38,7 @@ class Printer:
     def __init__(self):
         self.colours = Colour()
         self.mapping = {}
+        self.default = self.colours.Cfg + self.colours.Kbg
 
     def _default(self):
         self.mapping = {-1:self.colours.Kbg, 0:self.colours.Rbg, 1:self.colours.Mbg, 2:self.colours.Bbg, 3:self.colours.Cbg, 4:self.colours.Gbg, 5:self.colours.Ybg}
@@ -45,7 +46,7 @@ class Printer:
     def _reset(self):
         print(self.colours.RESET, end='')
 
-    def arrprint(self, array2d, dsp_vals=False, fgmode='r', bgmode='r'):
+    def arrprint(self, array2d, dsp_vals=False, fgmode='r', bgmode='r', width=2):
         import numpy
         max = numpy.max(numpy.array(array2d))
         min = numpy.min(numpy.array(array2d))
@@ -53,13 +54,23 @@ class Printer:
         self._reset()
         for row in array2d:
             for value in row:
-                print(self.colours.cmapbg(value, min, max, colour=bgmode) + self.colours.cmapfg(value, min, max, colour=fgmode) + str(int(value))*dsp_vals + '  '*(not dsp_vals) + ' '*dsp_vals*(cellwidth-len(str(value))), end='')
+                print(self.colours.cmapbg(value, min, max, colour=bgmode) + self.colours.cmapfg(value, min, max, colour=fgmode) + str(int(value))*dsp_vals + ' '*width*(not dsp_vals) + ' '*dsp_vals*(cellwidth-len(str(value))), end='')
             self._reset()
             print()
+    
+    def string_arrprint(self, array2d, width=2, dsp_vals=False):
+        for row in array2d:
+            self.iprint(row, width, dsp_vals=dsp_vals)
+            print()
 
-    def iprint(self, values):
+    def iprint(self, values, width=1, dsp_vals=False):
         for value in values:
-            print(self.mapping[value] + ' ' + Colour.RESET, end='')
+            c = self.mapping.get(value)
+            if c:
+                print_colour = c
+            else:
+                print_colour = self.default
+            print(print_colour + ' '*width*(not dsp_vals) + str(value)*dsp_vals + Colour.RESET, end='')
     
     def test(self):
         self.clear()
